@@ -5,8 +5,10 @@ import easyocr
 
 from llm import format_text_with_llm
 
-# Initialize EasyOCR reader once
-reader = easyocr.Reader(["en"], gpu=False)
+
+@st.cache_resource
+def load_easyocr():
+    return easyocr.Reader(["en"], gpu=False)
 
 
 def preprocess_image(image):
@@ -17,10 +19,10 @@ def preprocess_image(image):
 
 
 def extract_text_easyocr(image):
+    reader = load_easyocr()   # SAFE
     image_np = np.array(image)
     results = reader.readtext(image_np)
-    text = " ".join([res[1] for res in results])
-    return text
+    return " ".join([res[1] for res in results])
 
 
 def main():
@@ -45,7 +47,6 @@ def main():
         processed_image = preprocess_image(image)
         st.image(processed_image, caption="Processed Image", width=500)
 
-        # OCR ONLY
         if st.button("🔍 Extract Text (OCR Only)"):
             with st.spinner("Extracting text using OCR..."):
                 raw_text = extract_text_easyocr(processed_image)
@@ -60,12 +61,10 @@ def main():
                 mime="text/plain"
             )
 
-            # AI formatting option
             st.divider()
-            st.subheader("✨ Improve Text Using AI")
 
             if st.button("✨ Format Text Using AI"):
-                with st.spinner("Formatting using AI..."):
+                with st.spinner("Formatting text using AI..."):
                     clean_text = format_text_with_llm(raw_text)
 
                 st.text_area("AI Formatted Text", clean_text, height=300)
