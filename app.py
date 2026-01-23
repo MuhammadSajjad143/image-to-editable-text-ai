@@ -1,11 +1,12 @@
 import streamlit as st
 from PIL import Image, ImageEnhance, ImageFilter
-import pytesseract
+import numpy as np
+import easyocr
 
 from llm import format_text_with_llm
 
-# Tesseract path (local)
-pytesseract.pytesseract.tesseract_cmd = r"C:\Program Files\Tesseract-OCR\tesseract.exe"
+# Initialize EasyOCR reader once
+reader = easyocr.Reader(["en"], gpu=False)
 
 
 def preprocess_image(image):
@@ -15,44 +16,22 @@ def preprocess_image(image):
     return sharp
 
 
-def extract_text(image):
-    config = r"--oem 3 --psm 6"
-    return pytesseract.image_to_string(image, config=config)
-
-
-def inject_css():
-    st.markdown("""
-        <style>
-        .stApp {
-            background: linear-gradient(135deg, #e3f2fd, #bbdefb);
-        }
-        h1, h2, h3 {
-            color: #0d47a1;
-        }
-        textarea {
-            border-radius: 10px !important;
-        }
-        .stButton>button {
-            background-color: #1976d2;
-            color: white;
-            border-radius: 8px;
-            padding: 0.5em 1em;
-        }
-        </style>
-    """, unsafe_allow_html=True)
+def extract_text_easyocr(image):
+    image_np = np.array(image)
+    results = reader.readtext(image_np)
+    text = " ".join([res[1] for res in results])
+    return text
 
 
 def main():
     st.set_page_config(
-        page_title="Image to Editable Text",
+        page_title="Image to Editable Text (AI Enhanced)",
         page_icon="📄",
         layout="centered"
     )
 
-    inject_css()
-
-    st.title("📸 Image to Editable Text Converter")
-    st.write("Step 1: OCR Extraction | Step 2: AI Formatting")
+    st.title("📸 Image to Editable Text Converter (AI Enhanced)")
+    st.write("OCR + optional AI-based formatting (meaning preserved).")
 
     uploaded_file = st.file_uploader(
         "Upload an image",
@@ -66,12 +45,12 @@ def main():
         processed_image = preprocess_image(image)
         st.image(processed_image, caption="Processed Image", width=500)
 
-        # ---------------- OCR ONLY ----------------
+        # OCR ONLY
         if st.button("🔍 Extract Text (OCR Only)"):
             with st.spinner("Extracting text using OCR..."):
-                raw_text = extract_text(processed_image)
+                raw_text = extract_text_easyocr(processed_image)
 
-            st.subheader("🧾 Extracted OCR Text")
+            st.subheader("🧾 OCR Extracted Text")
             st.text_area("OCR Text", raw_text, height=200)
 
             st.download_button(
@@ -81,22 +60,19 @@ def main():
                 mime="text/plain"
             )
 
-            st.session_state["ocr_text"] = raw_text
+            # AI formatting option
+            st.divider()
+            st.subheader("✨ Improve Text Using AI")
 
-        # ---------------- AI FORMATTING ----------------
-        if "ocr_text" in st.session_state:
-            if st.button("✨ Format Text using AI"):
-                with st.spinner("Formatting text using AI (Groq)..."):
-                    formatted_text = format_text_with_llm(
-                        st.session_state["ocr_text"]
-                    )
+            if st.button("✨ Format Text Using AI"):
+                with st.spinner("Formatting using AI..."):
+                    clean_text = format_text_with_llm(raw_text)
 
-                st.subheader("✨ AI-Formatted Text")
-                st.text_area("Formatted Text", formatted_text, height=300)
+                st.text_area("AI Formatted Text", clean_text, height=300)
 
                 st.download_button(
-                    "⬇️ Download AI-Formatted Text",
-                    data=formatted_text,
+                    "⬇️ Download AI Text",
+                    data=clean_text,
                     file_name="formatted_text.txt",
                     mime="text/plain"
                 )
