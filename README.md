@@ -1,47 +1,39 @@
-📸 Image to Editable Text (OCR + AI)
+# 📸 Image to Editable Text Converter (Vision-Based)
 
-This project is a SaaS-based web application that converts text from images into editable text using OCR (Optical Character Recognition) and optionally formats the extracted text using AI.
+This project is a SaaS-based web application that converts text from images into editable text using a pretrained Vision Transformer model.
 
-The application is built using Streamlit and deployed on a SaaS platform. It allows users to extract raw text from images and then enhance the readability of that text using an AI language model.
+Instead of traditional OCR, the system uses Microsoft's TrOCR model, which performs especially well on handwritten academic notes and scanned documents.
 
-🚀 Features
+---
 
-📷 Upload images containing text (JPG / PNG)
+## 🚀 Features
 
-🔍 Extract text using OCR (Tesseract)
+- Upload handwritten or printed images (JPG / PNG)
+- Vision-based text extraction (no classical OCR)
+- Preserves original text content
+- Editable and downloadable text output
+- Deployed as a SaaS application using Streamlit Cloud
 
-✍️ Download raw OCR-extracted text
+---
 
-🤖 Format extracted text using AI (Groq LLM)
+## 🧠 Model Used
 
-📄 Download AI-formatted editable text
+- **Microsoft TrOCR (Vision Transformer)**
+- Pretrained handwritten text recognition model from Hugging Face
 
-☁️ Deployed as a SaaS application using Streamlit Cloud
+---
 
-🧠 How It Works
+## 🛠️ Tech Stack
 
-User uploads an image
+- Frontend & Backend: Streamlit
+- Vision Model: TrOCR (Hugging Face)
+- Language: Python
+- Deployment: Streamlit Cloud (SaaS)
 
-Image is preprocessed to improve OCR accuracy
+---
 
-OCR extracts raw text from the image
+## 📦 Installation (Local)
 
-User can:
-
-Download raw OCR text
-
-OR format the text using AI without changing its meaning
-
-AI-formatted text is editable and downloadable
-
-🛠️ Tech Stack
-
-Frontend & Backend: Streamlit
-
-OCR Engine: Tesseract OCR
-
-AI Model: Groq LLM (LLaMA 3)
-
-Language: Python
-
-Deployment: Streamlit Cloud (SaaS)
+```bash
+pip install -r requirements.txt
+streamlit run app.py

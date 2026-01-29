@@ -1,7 +1,6 @@
 streamlit
-pillow
-numpy
 easyocr
+numpy
+pillow
 torch
 torchvision
-groq
