@@ -1,39 +1,63 @@
-# 📸 Image to Editable Text Converter (Vision-Based)
+📸 Image to Editable Text (Vision-Based OCR)
 
-This project is a SaaS-based web application that converts text from images into editable text using a pretrained Vision Transformer model.
+This project is a SaaS-based web application that converts text from images into editable and downloadable text using a pretrained vision-based text recognition model.
 
-Instead of traditional OCR, the system uses Microsoft's TrOCR model, which performs especially well on handwritten academic notes and scanned documents.
+The application is built with Streamlit and deployed on a SaaS platform (Streamlit Cloud). It allows users to upload an image containing text and extract the text exactly as it appears in the image, without rewriting or altering the content.
 
----
+🚀 Features
 
-## 🚀 Features
+📷 Upload images containing text (JPG / PNG)
 
-- Upload handwritten or printed images (JPG / PNG)
-- Vision-based text extraction (no classical OCR)
-- Preserves original text content
-- Editable and downloadable text output
-- Deployed as a SaaS application using Streamlit Cloud
+🔍 Extract text using a pretrained vision-based OCR model (EasyOCR)
 
----
+🧾 View extracted text in editable form
 
-## 🧠 Model Used
+⬇️ Download extracted text as a .txt file
 
-- **Microsoft TrOCR (Vision Transformer)**
-- Pretrained handwritten text recognition model from Hugging Face
+☁️ Deployed as a SaaS web application using Streamlit Cloud
 
----
+⚡ No system-level dependencies (cloud-safe)
 
-## 🛠️ Tech Stack
+🧠 How It Works
 
-- Frontend & Backend: Streamlit
-- Vision Model: TrOCR (Hugging Face)
-- Language: Python
-- Deployment: Streamlit Cloud (SaaS)
+User uploads an image containing text
 
----
+Image is lightly preprocessed to improve recognition accuracy
 
-## 📦 Installation (Local)
+A pretrained vision-based OCR model extracts text directly from the image
 
-```bash
+The extracted text:
+
+Matches the content of the image
+
+Is editable inside the app
+
+Can be downloaded as a text file
+
+❗ The system does not paraphrase, summarize, or modify the text in any way.
+
+🛠️ Tech Stack
+
+Frontend & Backend: Streamlit
+
+Text Recognition Model: EasyOCR (Pretrained Vision Model)
+
+Programming Language: Python
+
+Libraries: EasyOCR, Torch, Pillow, NumPy
+
+Deployment Platform: Streamlit Cloud (SaaS)
+
+🎓 Academic Compliance
+
+This project complies with the academic requirement that:
+
+Text must be extracted exactly as present in the image
+
+No AI-based rewriting or semantic alteration is performed
+
+Pretrained vision models are allowed
+
+▶️ Run Locally
 pip install -r requirements.txt
 streamlit run app.py
